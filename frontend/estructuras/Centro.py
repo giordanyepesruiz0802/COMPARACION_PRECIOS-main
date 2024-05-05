@@ -9,7 +9,7 @@ centro_l= dbc.Container([
     dbc.Row([
         dbc.Col(
             dash_table.DataTable(
-                id='tabla_granulometria',
+                id='VALOR_MENOR',
                 columns=[
                     {'name': 'Valor Menor', 'id': 'VALOR_MENOR', 'editable': False},  # Modificar el texto del encabezado
                 ],
