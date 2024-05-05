@@ -5,13 +5,18 @@ from dash import html, Dash,dcc,Input,Output,callback,dash_table
 from backend.valores import max_values
 
 centro_l= dbc.Container([
-   html.H5("VALOR UNITARIO COMPARADO"),
-   dash_table.DataTable(
-      id='VALOR_MENOR',
-      columns=[
-          {'name':'PRECIO MENOR','id':'VALOR_MENOR','editable':False},
-        ],
-     data= max_values.to_dict('records'),
-     style_table={'overflowX': 'auto'}
-  )
-])
+   html.H5("VALOR UNITARIO COMPARADO", className='mb-4 text-center'),
+    dbc.Row([
+        dbc.Col(
+            dash_table.DataTable(
+                id='tabla_granulometria',
+                columns=[
+                    {'name':'PRECIO MENOR','id':'VALOR_MENOR','editable':False},
+                ],
+                data= max_values.to_dict('records'),
+                style_table={'overflowX': 'auto'}
+            ),
+            md=12
+        )
+    ], className='shadow p-3 border rounded')
+], className='bg-light py-4')

@@ -5,7 +5,7 @@ from dash import html, Dash,dcc,Input,Output,callback,dash_table
 from backend.valores import valor_1
 
 Izquierda_2= dbc.Container([
-    html.H6("PRECIO UNITARIO COTIZANTE 1", className='mb-4'),
+    html.H5("PRECIO UNITARIO COTIZANTE 1", className='mb-4 text-center'),
     dash_table.DataTable(
         id='tabla_valor_1',
         columns=[
