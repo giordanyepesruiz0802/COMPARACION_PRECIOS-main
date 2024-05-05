@@ -81,30 +81,3 @@ max_values = pd.DataFrame({
     "VALOR_MENOR": [min(v1, v2) for v1, v2 in zip(valor1, valor2)]
 })
 
-#data = {
- #   'ITEM': ["CONCRETO", "GRANITO", "MADERA", "ACERO"],
- #   'VALOR_BASE': [40, 35, 30, 45]
-#}
-#base_datos = pd.DataFrame(data)
-
-# Función para buscar el valor base según el item
-#def buscar_valor_base(item):
- #   valor_base = base_datos[base_datos['ITEM'] == item]['VALOR_BASE'].values
-  #  return valor_base[0] if len(valor_base) > 0 else None
-
-# Agregar una columna con el valor base para item_1
-#item_1['VALOR_BASE'] = item_1['ITEM_1'].apply(buscar_valor_base)
-
-# Agregar una columna con el valor base para item_2
-#item_2['VALOR_BASE'] = item_2['ITEM_2'].apply(buscar_valor_base)
-
-# Crear tabla comparativa
-#comparativa = pd.DataFrame({
- #   'ITEM_1': item_1['ITEM_1'],
-  #  'ITEM_2': item_2['ITEM_2'],
-  #  'VALOR_MENOR': item_1['VALOR_MENOR'],
-  #  'VALOR_BASE_1': item_1['VALOR_BASE'],
-  #  'VALOR_BASE_2': item_2['VALOR_BASE']
-#})
-
-#print(comparativa)
