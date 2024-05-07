@@ -15,7 +15,10 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_
 app.layout = layout
 
 table_style = {
-    'font-size': '14px',  # Tamaño de la fuente
+    'font-size': '14px',
+    'margin-top': '20px',
+    'margin-bottom': '20px',
+    'overflowX': 'scroll'
 }
 
 @app.callback(
