@@ -51,17 +51,9 @@ def update_item_comparison_table(_):
     edited_items = max_values[max_values['VALOR_MENOR'] == valor_menor]['ITEM'].tolist()
     
     # Filtrar los datos de la base de datos según los valores de item_1 y item_2
-    filtered_data_1 = data_csv[data_csv['TOTAL'].isin(map_valor_1.keys())]
-    filtered_data_2 = data_csv[data_csv['TOTAL'].isin(map_valor_2.keys())]
+    filtered_data_1 = data_csv[data_csv['ITEM'].str.contains('|'.join(edited_items), case=False)]
     
-    # Asignar los valores correspondientes a ITEM en los datos filtrados
-    filtered_data_1['VALOR'] = filtered_data_1['TOTAL'].map(map_valor_1)
-    filtered_data_2['VALOR'] = filtered_data_2['TOTAL'].map(map_valor_2)
-    
-    # Concatenar los resultados filtrados
-    filtered_data = pd.concat([filtered_data_1, filtered_data_2])
-    
-    return filtered_data.to_dict('records')
+    return filtered_data_1.to_dict('records')
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0', port=8050)
