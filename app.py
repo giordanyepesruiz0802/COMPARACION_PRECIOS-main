@@ -14,20 +14,6 @@ map_valor_2 = dict(zip(item_2['ITEM_2'], valor_2['PRECIO_UNITARIO_2']))
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.layout = layout
 
-table_style = {
-    'font-size': '14px',
-    'margin-top': '20px',
-    'margin-bottom': '20px',
-    'overflowX': 'scroll'
-}
-
-@app.callback(
-    Output('tabla_valor_1', 'style_data'),
-    Output('tabla_valor_2', 'style_data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_table_styles(_):
-    return [table_style], [table_style]
 @app.callback(
     Output('valor-menor-container', 'children'),
     [Input('tabla_valor_1', 'data'),
