@@ -6,6 +6,7 @@ from frontend.layout import layout
 from backend.valores import max_values, item_1, item_2, valor_1, valor_2
 from difflib import get_close_matches
 
+
 # Leer el archivo CSV
 data_csv = pd.read_csv('backend/Lista_oficial_de_precios_unitarios_fijos_de_Obra_P_blica_y_de_consultor_a_-_DEPARTAMENTO_DE_BOYAC__20240505.csv')
 
