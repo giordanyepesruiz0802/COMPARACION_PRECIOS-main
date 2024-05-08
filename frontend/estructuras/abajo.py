@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc, Input, Output, Dash
 import pandas as pd
 from difflib import get_close_matches
+import dash_table
 
 
 tabla_resultados = dbc.Container([
