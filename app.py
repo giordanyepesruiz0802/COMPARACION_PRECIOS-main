@@ -15,7 +15,7 @@ map_valor_2 = dict(zip(item_2['ITEM_2'], valor_2['PRECIO_UNITARIO_2']))
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.layout = layout
-
+server = app.server
 @app.callback(
     Output('valor-menor-container', 'children'),
     [Input('tabla_valor_1', 'data'),
