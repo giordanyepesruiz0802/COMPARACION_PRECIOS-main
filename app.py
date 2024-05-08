@@ -68,4 +68,4 @@ def update_valor_menor_and_comparison_table(data_valor_1, data_valor_2):
         return None, None
 
 if __name__ == '__main__':
-    app.run_server(debug=True, host='0.0.0.0', port=8050)
+    app.run_server(debug=True, port=8050)
