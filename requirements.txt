@@ -1,9 +1,5 @@
-<<<<<<< HEAD
+
 dash
 pandas
 dash_bootstrap_components
-=======
-dash
-pandas
-dash_bootstrap_components
->>>>>>> 852e977479b4066c1cc5389231c730b97b35da73
+
