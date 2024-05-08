@@ -5,6 +5,8 @@ import pandas as pd
 from frontend.layout import layout
 from backend.valores import max_values, item_1, item_2, valor_1, valor_2
 from difflib import get_close_matches
+import dash_table
+
 
 
 # Leer el archivo CSV
@@ -18,37 +20,28 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_
 
 app.layout = layout
 
-@app.callback(
-    Output('valor-menor-container', 'children'),
-    [Input('tabla_valor_1', 'data'),
-     Input('tabla_valor_2', 'data')]
-)
-def update_valor_menor(data_valor_1, data_valor_2):
-    if data_valor_1 and data_valor_2:
-        valor_1_df = pd.DataFrame(data_valor_1)
-        valor_2_df = pd.DataFrame(data_valor_2)
-        
-        # Convertir las columnas a tipo float
-        valor_1_df['PRECIO_UNITARIO_1'] = valor_1_df['PRECIO_UNITARIO_1'].astype(float)
-        valor_2_df['PRECIO_UNITARIO_2'] = valor_2_df['PRECIO_UNITARIO_2'].astype(float)
-        
-        # Calcular el valor menor
-        max_values['VALOR_MENOR'] = [min(v1, v2) for v1, v2 in zip(valor_1_df['PRECIO_UNITARIO_1'], valor_2_df['PRECIO_UNITARIO_2'])]
-        
-        return None
+nueva_tabla = html.Div([
+    html.H6("Nombres Similares y sus Valores Correspondientes", className='mb-4 text-center'),
+    dash_table.DataTable(
+        id='tabla_similares',
+        columns=[
+            {'name': 'ITEM', 'id': 'ITEM'},
+            {'name': 'TOTAL', 'id': 'TOTAL'},
+            {'name': 'VALOR MENOR', 'id': 'VALOR_MENOR'}
+        ],
+        style_table={'overflowX': 'auto'}
+    )
+])
 
+# Añade la nueva tabla al layout
+app.layout = layout + nueva_tabla
+
+# Callback para actualizar la nueva tabla
 @app.callback(
-    Output('VALOR_MENOR', 'data'),
+    Output('tabla_similares', 'data'),
     [Input('valor-menor-container', 'children')]
 )
-def update_comparison_table(_):
-    return max_values.to_dict('records')
-
-@app.callback(
-    Output('tabla_item_comparado', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_item_comparison_table(_):
+def update_similares_table(_):
     # Obtener el valor menor comparado
     valor_menor = max_values['VALOR_MENOR'].min()
     
@@ -71,14 +64,22 @@ def update_item_comparison_table(_):
     # Filtrar los datos del CSV según las palabras similares
     filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
     
-    return filtered_data[['ITEM', 'TOTAL']].to_dict('records')
+    # Obtener los valores de la columna "TOTAL"
+    valores_menor = filtered_data['TOTAL'].tolist()
+    
+    # Crear diccionario para la nueva tabla
+    similar_data = [{'ITEM': item, 'TOTAL': total, 'VALOR_MENOR': valor_menor} for item, total in zip(similar_items, valores_menor)]
+    
+    return similar_data
+#Con esto, la nueva tabla tabla_similares se actualizará cada vez que cambie el valor en valor-menor-container, mostrando los nombres similares encontrados en la columna "ITEM", su correspondiente valor de la columna "TOTAL", y el valor menor de la tabla VALOR_MENOR. Asegúrate de ajustar el diseño y la posición de la nueva tabla según sea necesario en tu aplicación.
 
-@app.callback(
-    Output('tabla_valores_menor', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_valores_menor_table(_):
-    return max_values[['ITEM', 'VALOR_MENOR']].to_dict('records')
 
+
+
+
+
+Message ChatGPT
+
+ChatGPT can make mistakes. Consider checking important information.
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0', port=8050)
