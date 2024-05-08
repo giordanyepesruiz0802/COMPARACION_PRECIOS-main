@@ -18,11 +18,12 @@ server = app.server
 app.layout = layout
 
 @app.callback(
-    Output('valor-menor-container', 'children'),
+    [Output('valor-menor-container', 'children'),
+     Output('tabla_resultados', 'data')],
     [Input('tabla_valor_1', 'data'),
      Input('tabla_valor_2', 'data')]
 )
-def update_valor_menor(data_valor_1, data_valor_2):
+def update_valor_menor_and_comparison_table(data_valor_1, data_valor_2):
     if data_valor_1 and data_valor_2:
         valor_1_df = pd.DataFrame(data_valor_1)
         valor_2_df = pd.DataFrame(data_valor_2)
@@ -34,46 +35,37 @@ def update_valor_menor(data_valor_1, data_valor_2):
         # Calcular el valor menor
         max_values['VALOR_MENOR'] = [min(v1, v2) for v1, v2 in zip(valor_1_df['PRECIO_UNITARIO_1'], valor_2_df['PRECIO_UNITARIO_2'])]
         
-        return None
-
-@app.callback(
-    Output('VALOR_MENOR', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-@app.callback(
-    Output('tabla_resultados', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_comparison_table(_):
-    # Obtener el valor menor comparado
-    valor_menor = max_values['VALOR_MENOR'].min()
+        # Obtener el valor menor comparado
+        valor_menor = max_values['VALOR_MENOR'].min()
     
-    # Determinar si el valor menor corresponde a item 1 o item 2
-    if valor_menor in valor_1['PRECIO_UNITARIO_1'].values:
-        item_df = item_1
-        valor_key = 'PRECIO_UNITARIO_1'
+        # Determinar si el valor menor corresponde a item 1 o item 2
+        if valor_menor in valor_1['PRECIO_UNITARIO_1'].values:
+            item_df = item_1
+            valor_key = 'PRECIO_UNITARIO_1'
+        else:
+            item_df = item_2
+            valor_key = 'PRECIO_UNITARIO_2'
+        
+        # Obtener las palabras a buscar en la columna "ITEM"
+        edited_items = item_df[item_df[valor_key] == valor_menor]['ITEM_1' if item_df is item_1 else 'ITEM_2'].tolist()
+        
+        # Filtrar los datos del CSV por palabras similares al valor menor
+        similar_items = []
+        for edited_item in edited_items:
+            similar_items.extend(get_close_matches(edited_item, data_csv['ITEM'], n=1, cutoff=0.8))
+        
+        # Filtrar los datos del CSV según las palabras similares
+        filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
+        
+        # Obtener los valores de la columna "TOTAL"
+        valores_menor = filtered_data['TOTAL'].tolist()
+        
+        # Crear diccionario para la nueva tabla de resultados
+        resultados_data = [{'ITEM': item, 'TOTAL': total, 'VALOR_MENOR': valor_menor} for item, total in zip(similar_items, valores_menor)]
+        
+        return None, resultados_data
     else:
-        item_df = item_2
-        valor_key = 'PRECIO_UNITARIO_2'
-    
-    # Obtener las palabras a buscar en la columna "ITEM"
-    edited_items = item_df[item_df[valor_key] == valor_menor]['ITEM_1' if item_df is item_1 else 'ITEM_2'].tolist()
-    
-    # Filtrar los datos del CSV por palabras similares al valor menor
-    similar_items = []
-    for edited_item in edited_items:
-        similar_items.extend(get_close_matches(edited_item, data_csv['ITEM'], n=1, cutoff=0.8))
-    
-    # Filtrar los datos del CSV según las palabras similares
-    filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
-    
-    # Obtener los valores de la columna "TOTAL"
-    valores_menor = filtered_data['TOTAL'].tolist()
-    
-    # Crear diccionario para la nueva tabla de resultados
-    resultados_data = [{'ITEM': item, 'TOTAL': total, 'VALOR_MENOR': valor_menor} for item, total in zip(similar_items, valores_menor)]
-    
-    return resultados_data
+        return None, None
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0', port=8050)
