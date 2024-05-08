@@ -4,6 +4,7 @@ from dash import html
 from .estructuras.derecha import Derecha
 from .estructuras.izquierda import Izquierda
 from .estructuras.Centro import centro_l
+from .estructuras.abajo import centro_l
 
 layout = dbc.Container([
     dbc.Row([
