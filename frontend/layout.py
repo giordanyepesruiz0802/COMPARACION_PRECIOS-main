@@ -13,5 +13,5 @@ layout = dbc.Container([
         dbc.Col(Derecha, md=4, style={'background-color': 'lightseagreen'}),
     ]),
     html.Div(id="valor-menor-container", style={"display": "none"}),
-    tabla_resultados
+    #tabla_resultados
 ])
