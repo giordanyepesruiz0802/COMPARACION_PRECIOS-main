@@ -18,7 +18,7 @@ map_valor_2 = dict(zip(item_2['ITEM_2'], valor_2['PRECIO_UNITARIO_2']))
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
-app.layout = layout
+
 
 nueva_tabla = html.Div([
     html.H6("Nombres Similares y sus Valores Correspondientes", className='mb-4 text-center'),
