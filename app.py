@@ -47,7 +47,7 @@ def update_valor_menor_and_comparison_table(data_valor_1, data_valor_2):
             valor_key = 'PRECIO_UNITARIO_2'
         
         # Obtener las palabras a buscar en la columna "ITEM"
-        edited_items = item_df[item_df[valor_key] == valor_menor]['ITEM_1' if item_df is item_1 else 'ITEM_1'].tolist()
+        edited_items = item_df[item_df[valor_key] == valor_menor]['ITEM_1' if item_df is item_1 else item_2 ].tolist()
         
         # Filtrar los datos del CSV por palabras similares al valor menor
         similar_items = []
