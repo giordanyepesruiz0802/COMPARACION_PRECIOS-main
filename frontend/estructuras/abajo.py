@@ -1,9 +1,9 @@
 import dash
 import dash_bootstrap_components as dbc 
-from dash import html, dcc, Input, Output, Dash
+from dash import html, Dash,dcc,Input,Output,callback,dash_table
 import pandas as pd
 from difflib import get_close_matches
-from dash.dash_table.Format import Group
+
 
 
 tabla_resultados = dbc.Container([
