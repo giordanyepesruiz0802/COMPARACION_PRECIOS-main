@@ -46,23 +46,37 @@ def update_comparison_table(_):
     Output('tabla_item_comparado', 'data'),
     [Input('valor-menor-container', 'children')]
 )
-def update_item_comparison_table(data):
-    if data:
-        min_valor = data.get('valor_1') if 'valor_1' in data else data.get('valor_2')
-        item_df = data.get('item')
-
-        edited_items = item_df[item_df['PRECIO_UNITARIO_1' if 'valor_1' in data else 'PRECIO_UNITARIO_2'] == min_valor]['ITEM_1' if 'valor_1' in data else 'ITEM_2'].tolist()
-
-        similar_items = []
-        for edited_item in edited_items:
-            similar_items.extend(get_close_matches(edited_item, data_csv['ITEM'], n=1, cutoff=0.8))
-
-        filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
-
-        return filtered_data.to_dict('records')
+def update_item_comparison_table(_):
+    # Obtener el valor menor comparado
+    valor_menor = max_values['VALOR_MENOR'].min()
+    
+    # Determinar si el valor menor corresponde a item 1 o item 2
+    if valor_menor in valor_1['PRECIO_UNITARIO_1'].values:
+        item_df = item_1
+        valor_key = 'PRECIO_UNITARIO_1'
     else:
-        return []
+        item_df = item_2
+        valor_key = 'PRECIO_UNITARIO_2'
+    
+    # Obtener las palabras a buscar en la columna "ITEM"
+    edited_items = item_df[item_df[valor_key] == valor_menor]['ITEM_1' if item_df is item_1 else 'ITEM_2'].tolist()
+    
+    # Filtrar los datos del CSV por palabras similares al valor menor
+    similar_items = []
+    for edited_item in edited_items:
+        similar_items.extend(get_close_matches(edited_item, data_csv['ITEM'], n=1, cutoff=0.8))
+    
+    # Filtrar los datos del CSV según las palabras similares
+    filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
+    
+    return filtered_data[['ITEM', 'TOTAL']].to_dict('records')
 
+@app.callback(
+    Output('tabla_valores_menor', 'data'),
+    [Input('valor-menor-container', 'children')]
+)
+def update_valores_menor_table(_):
+    return max_values[['ITEM', 'VALOR_MENOR']].to_dict('records')
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8050)
