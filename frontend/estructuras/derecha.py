@@ -13,6 +13,5 @@ Derecha= dbc.Container([
 
 
     ])
-
     
 ])
