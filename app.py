@@ -41,13 +41,6 @@ def update_valor_menor(data_valor_1, data_valor_2):
     [Input('valor-menor-container', 'children')]
 )
 def update_comparison_table(_):
-    return max_values.to_dict('records')
-
-@app.callback(
-    Output('tabla_item_comparado', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_item_comparison_table(_):
     # Obtener el valor menor comparado
     valor_menor = max_values['VALOR_MENOR'].min()
     
@@ -70,14 +63,16 @@ def update_item_comparison_table(_):
     # Filtrar los datos del CSV según las palabras similares
     filtered_data = data_csv[data_csv['ITEM'].isin(similar_items)]
     
-    return filtered_data[['ITEM', 'TOTAL']].to_dict('records')
-
-@app.callback(
-    Output('tabla_valores_menor', 'data'),
-    [Input('valor-menor-container', 'children')]
-)
-def update_valores_menor_table(_):
-    return max_values[['ITEM', 'VALOR_MENOR']].to_dict('records')
+    # Obtener los valores de la columna "TOTAL"
+    valores_menor = filtered_data['TOTAL'].tolist()
+    
+    # Crear diccionario para la tabla de ítems comparados
+    item_comparison_data = [{'ITEM': item, 'TOTAL': total} for item, total in zip(similar_items, valores_menor)]
+    
+    # Crear diccionario para la tabla de valores menores
+    valores_menor_data = [{'VALOR_MENOR': valor_menor}] * len(similar_items)
+    
+    return valores_menor_data, item_comparison_data
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0', port=8050)
