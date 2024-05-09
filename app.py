@@ -43,7 +43,7 @@ def update_valor_menor(data_valor_1, data_valor_2):
 nueva_tabla = html.Div([
     html.H6("Nombres Similares y sus Valores Correspondientes", className='mb-4 text-center'),
     dash_table.DataTable(
-        id='tabla_similares',
+        id='nueva_tabla',
         columns=[
             {'name': 'ITEM', 'id': 'ITEM'},
             {'name': 'TOTAL', 'id': 'TOTAL'},
@@ -53,12 +53,13 @@ nueva_tabla = html.Div([
     )
 ])
 
+
 # Añade la nueva tabla al layout
 app.layout = layout + nueva_tabla
 
 # Callback para actualizar la nueva tabla
 @app.callback(
-    Output('tabla_similares', 'data'),
+    Output('nueva_tabla', 'data'),
     [Input('valor-menor-container', 'children')]
 )
 def update_similares_table(_):
