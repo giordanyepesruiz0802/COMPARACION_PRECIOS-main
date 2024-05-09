@@ -18,8 +18,28 @@ map_valor_2 = dict(zip(item_2['ITEM_2'], valor_2['PRECIO_UNITARIO_2']))
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
+@app.callback(
+    Output('valor-menor-container', 'children'),
+    [Input('tabla_valor_1', 'data'),
+     Input('tabla_valor_2', 'data')]
+)
+def update_valor_menor(data_valor_1, data_valor_2):
+    if data_valor_1 and data_valor_2:
+        valor_1_df = pd.DataFrame(data_valor_1)
+        valor_2_df = pd.DataFrame(data_valor_2)
+        
+        # Convertir las columnas a tipo float
+        valor_1_df['PRECIO_UNITARIO_1'] = valor_1_df['PRECIO_UNITARIO_1'].astype(float)
+        valor_2_df['PRECIO_UNITARIO_2'] = valor_2_df['PRECIO_UNITARIO_2'].astype(float)
+# Calcular el valor menor
+        max_values['VALOR_MENOR'] = [min(v1, v2) for v1, v2 in zip(valor_1_df['PRECIO_UNITARIO_1'], valor_2_df['PRECIO_UNITARIO_2'])]
+        
+        return None
 
-
+@app.callback(
+    Output('VALOR_MENOR', 'data'),
+    [Input('valor-menor-container', 'children')]
+)
 nueva_tabla = html.Div([
     html.H6("Nombres Similares y sus Valores Correspondientes", className='mb-4 text-center'),
     dash_table.DataTable(
